@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>比率計算</title>
+<style type="text/css">
+body {
+    text-align: center;
+}
+div {
+    margin: 0.3em;
+}
+input[type="number"] {
+    width: 150px;
+    padding: 5px;
+}
+table {
+    margin: 1.5em auto;
+}
+td:nth-of-type(2n+1) {
+    width: 90px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<h1>比率計算</h1>
+
+<div>
+    <input type="number" id="width" placeholder="横のサイズ">：<input type="number" id="height" placeholder="縦のサイズ">
+</div>
+<div>
+    <input type="radio" id="adjustWidth" name="adjust" value="adjustWidth" checked>
+    <label for="adjustWidth">横に合わせる</label>
+    <input type="radio" id="adjustHeight" name="adjust" value="adjustHeight">
+    <label for="adjustHeight">縦に合わせる</label>
+</div>
+<div>
+    <button id="calc">計算</button>
+    <button id="clear">クリア</button>
+</div>
+
+<table>
+    <tbody>
+        <tr>
+            <th>16:9にすると</th>
+            <td id="wRatio1"></td>
+            <td>：</td>
+            <td id="hRatio1"></td>
+        </tr>
+        <tr>
+            <th>4:3にすると</th>
+            <td id="wRatio2"></td>
+            <td>：</td>
+            <td id="hRatio2"></td>
+        </tr>
+        <tr>
+            <th>黄金比にすると</th>
+            <td id="wRatio3"></td>
+            <td>：</td>
+            <td id="hRatio3"></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>小数点第1位未満を四捨五入しています。</p>
+
+<script>
+
+// 小数点第1位未満を四捨五入する
+function round01(value) {
+    return Math.round(value * 10) / 10;
+}
+
+$(() => {
+    // 計算ボタン押下時の処理
+    $('button#calc').on('click', () => {
+        var width = $('#width').val();
+        var height = $('#height').val();
+        var adjust = $('input[name="adjust"]:checked').val();
+
+        // 横に合わせる場合
+        if(adjust == 'adjustWidth') {
+            $('#wRatio1, #wRatio2, #wRatio3').text(width);
+            // 16:9
+            $('#hRatio1').text(round01((width / 16) * 9));
+            // 4:3
+            $('#hRatio2').text(round01((width / 4) * 3));
+            // 黄金比
+            $('#hRatio3').text(round01(width * 1.618));
+        }
+        // 縦に合わせる場合
+        if(adjust == 'adjustHeight') {
+            $('#hRatio1, #hRatio2, #hRatio3').text(height);
+            // 16:9
+            $('#wRatio1').text(round01((height / 9) * 16));
+            // 4:3
+            $('#wRatio2').text(round01((height / 3) * 4));
+            // 黄金比
+            $('#wRatio3').text(round01(height / 1.618));
+        }
+    });
+
+    // クリアボタン押下時の処理
+    $('button#clear').on('click', () => {
+        $('#width, #height').val('');
+        $('#wRatio1, #hRatio1, #wRatio2, #hRatio2, #wRatio3, #hRatio3').text('');
+    });
+});
+
+</script>
+</body>
+</html>
